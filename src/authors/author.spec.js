@@ -1,8 +1,11 @@
-require('dotenv').config()
-const sinon = require('sinon');
+require('dotenv').config();
+const request = require('supertest');
+const express = require('express');
 const expect = require('chai').expect;
 const Author = require('./author.model');
 const mongoose = require('mongoose');
+
+
 // it('', (done)=>{ done();});
 describe('Author Model', () => {
     var author;
@@ -39,28 +42,32 @@ describe('Author Model', () => {
 
 });
 
-//I should be mocking the requests here
-describe('Author Model', () => {
+//Integration testing routes
+describe('Author routes', () => {
+    let app;
+    let testAuthor = [{"_id":"5d3c7dabc85d537c13df1c11","bio":"","facebook_url":"","first_name":"Larry","instagram_url":"","last_name":"Adams","linkedin_url":"","profile_image":"https://avatars2.githubusercontent.com/u/38711500?v=4","slug":"erick","title":"","twitter_handle":"","email":"elrdevllc@gmail.com"}];
+    before(()=>{
+        app = express();
 
-    mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
-    
-    mongoose.set('debug', true);
-    console.log('mongoose connected');
-    before(() => {
+        var port = 3000;
+        //mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
         
-     
-        model.insertMany([
-            { first_name: 'erick1', last_name: 'roberts1', profile_image: 'some1.png', slug: 'i_am_erick1' },
-            { bio: 'I am great2', first_name: 'erick2', last_name: 'roberts2', profile_image: 'some.png2', slug: 'i_am_erick2' },
-            { bio: 'I am great3', first_name: 'erick3', last_name: 'roberts3', profile_image: 'some3.png', slug: 'i_am_erick3' },
-        ])
+        var router = express.Router();
+        
+        router = require('../routes')(app, router);
     });
-
     it('should return an list of all the authors in the collection', (done) => {
-        console.log(Author.);
+        request(app).get('/api/author/s').then((response)=>{
+            expect(response.body).not.undefined;
+            expect(response.statusCode).equal(200);
+            
+        });
         done();
     });
     it('should return one Author given the id', (done) => {
+        request(app).get('/api/author/5d3c7dabc85d537c13df1c11').then((response)=>{
+            expect(response.body).equal(testAuthor);
+        });
         done();
     });
     it('should update one author based on the id and the given object', (done) => {
