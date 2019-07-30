@@ -45,7 +45,19 @@ describe('Author Model', () => {
 //Integration testing routes
 describe('Author routes', () => {
     let app;
-    let testAuthor = [{"_id":"5d3c7dabc85d537c13df1c11","bio":"","facebook_url":"","first_name":"Larry","instagram_url":"","last_name":"Adams","linkedin_url":"","profile_image":"https://avatars2.githubusercontent.com/u/38711500?v=4","slug":"erick","title":"","twitter_handle":"","email":"elrdevllc@gmail.com"}];
+    let testAuthor = [{"_id": "5d40296d89a060343e2b1ccc",
+    "bio": "none",
+    "facebook_url": "",
+    "first_name": "Larry",
+    "instagram_url": "",
+    "last_name": "Adams0",
+    "linkedin_url": "",
+    "profile_image": "https://avatars2.githubusercontent.com/u/38711500?v=4",
+    "slug": "erick0",
+    "title": "",
+    "twitter_handle": "",
+    "email": "elrdevllc@gmail.com"}];
+
     before(()=>{
         app = express();
 
@@ -57,21 +69,39 @@ describe('Author routes', () => {
         router = require('../routes')(app, router);
     });
     it('should return an list of all the authors in the collection', (done) => {
-        request(app).get('/api/author/s').then((response)=>{
-            expect(response.body).not.undefined;
-            expect(response.statusCode).equal(200);
-            
+        request(app).get('/api/author/s').end( (err, res) =>{
+            if(err)
+                return done(err);
+            expect(res.body).not.undefined;
+            expect(res.statusCode).equal(200);
+            done();
         });
-        done();
+        
     });
     it('should return one Author given the id', (done) => {
-        request(app).get('/api/author/5d3c7dabc85d537c13df1c11').then((response)=>{
-            expect(response.body).equal(testAuthor);
+        request(app).get('/api/author/5d40296d89a060343e2b1ccc').end( (err, res) =>{
+            if(err)
+                return done(err);
+            expect(res.body._id).equal(testAuthor._id);
+            expect(res.statusCode).equal(200);
+            done();
+
         });
-        done();
     });
     it('should update one author based on the id and the given object', (done) => {
-        done();
+        let putTest = testAuthor;
+        putTest.facebook_url = 'myFacebook_url.com';
+        const testMsg = {"message":"Author was updated!"};
+        request(app).put('/api/author/5d40296d89a060343e2b1ccc')
+        .send(putTest)
+        .end( (err, res) =>{
+            if(err)
+                return done(err);
+            expect(res.body.message).equals(testMsg.message);
+            expect(res.statusCode).equal(200);
+            done();
+        });
+        
     });
     it('should delete an author object based on a given id', (done) => {
         done();

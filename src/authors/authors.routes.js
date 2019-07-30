@@ -42,12 +42,31 @@ router.route('/author/s')
 
 router.route('/author/:author_id')
     .get( (req, res) => {
-        console.log(req.params.author_id);
         model.find({"_id":req.params.author_id}).then((author)=>{
             res.json(author);
         }, (err)=>{
             res.send(error);
         });
-    });
+    })
+    .put( (req, res) => { 
+        model.updateOne({"_id":req.params.author_id},{
+            bio: req.body.bio,
+            facebook_url: req.body.facebook_url,
+            first_name: req.body.first_name,
+            instagram_url : req.body.instagram_url,
+            last_name : req.body.last_name,
+            linkedin_url : req.body.linkedin_url,
+            pinterest_url : req.body.pinterest_url,
+            profile_image : req.body.profile_image,
+            slug : req.body.slug,
+            title : req.body.title,
+            twitter_handle : req.body.twitter_handle}).then( (stats) => {
+            
+                if(stats.ok !== 1)
+                    res.json({"message":"Author update error!"});
+             
+                res.json({"message":"Author was updated!"});
+            });
+       });
 
 module.exports = router;
