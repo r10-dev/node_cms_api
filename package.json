@@ -25,7 +25,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "esm": "^3.2.25",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "nodemon": "^1.19.1",
     "should": "^13.2.3",
     "sinon": "^7.3.2",
